@@ -1,0 +1,99 @@
+package adsa;
+ 
+import java.util.*;
+import java.util.Scanner;
+ 
+public class DevelopModule {
+    static int totalVerticesNo;
+    static int[][] adjmatrix = null;
+    
+    public DevelopModule(int totalVerticesNo){
+        this.totalVerticesNo = totalVerticesNo;
+        adjmatrix = new int[totalVerticesNo][totalVerticesNo]; 
+    }
+//---Adding Edges to Graph------------------------------------
+    public static void addEdge(int source, int destination){
+        adjmatrix[source][destination] = 1; 
+    }
+//---Topological Sort-----------------------------------------
+    public static void topologicalSort(){
+        Vector toposorted = new Vector();
+        int visited = 0;
+        int[] indegree = new int[totalVerticesNo];
+        Queue <Integer> queue = new LinkedList<>();
+        
+        //setting all indegree values to 0
+        for(int i=0; i<totalVerticesNo; i++){
+            indegree[i] = 0;
+        }
+        
+        //setting indegrees according to graph
+        for(int i=0; i<totalVerticesNo; i++){
+            for(int j=0; j<totalVerticesNo; j++){
+                if(adjmatrix[i][j]==1)
+                    indegree[j] = indegree[j]+1;
+            }
+        }
+        
+        //adds to queue the vertex with indegree 0
+        for(int i=0; i<totalVerticesNo; i++){
+            if(indegree[i] == 0){
+                queue.add(i);       
+            }
+        }
+        
+        int vertex;
+ 
+        while(!queue.isEmpty()){
+            vertex = queue.poll();
+            toposorted.add(vertex); //remove from queue and add to topo sorted vector
+            visited = visited +1;
+            
+            for(int j=0; j<totalVerticesNo; j++){
+                if(adjmatrix[vertex][j] == 1){
+                    indegree[j] = indegree[j] - 1;
+                    if(indegree[j] == 0){
+                        queue.add(j);
+                    }
+            }
+          }
+        }
+        
+        if(visited != totalVerticesNo){
+            System.out.println("Cycle Exists Topological Sorting not possible");
+        }
+        
+        else{
+            System.out.println("Topological Sort: ");
+            //Printing topological sort sequence
+            Enumeration topo = toposorted.elements();
+            while (topo.hasMoreElements()) {
+                System.out.print(" "+topo.nextElement()); 
+            }
+        }
+        
+        System.out.print("\n");
+    }
+//---Main Function--------------------------------------------
+    public static void main(String args[]){
+        Scanner input = new Scanner(System.in);
+        
+        System.out.println("Enter total Number of Vertices in the Graph");
+        int ans = input.nextInt();
+        
+        DevelopModule module = new DevelopModule(ans);
+        
+        addEdge(1,0);
+        addEdge(2,1);
+        addEdge(3,1);
+        addEdge(5,2);
+        addEdge(5,4);
+        addEdge(6,3);
+        addEdge(6,4);
+        addEdge(7,5);
+        addEdge(7,6);
+        
+        System.out.println("One of the order in which the modules can be developed is: ");
+        topologicalSort();
+    }
+}
