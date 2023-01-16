@@ -1,0 +1,126 @@
+package adsa;
+import java.util.Scanner;
+import java.util.*;
+
+public class Airline {
+    static int totalVerticesNo;
+    static int[][] adjmatrix = null;
+    
+    public Airline(int totalVerticesNo){
+        this.totalVerticesNo = totalVerticesNo;
+        adjmatrix = new int[totalVerticesNo][totalVerticesNo]; //7x7 matrix
+    }
+//---Adding Edges to Graph-------------------------------------------------
+    public static void addEdge(int source, int destination){
+        adjmatrix[source][destination] = 1; 
+    }
+//---Path between two Vertices---------------------------------------------
+    public static void findPath(int source, int destination){
+        boolean nodes[] = new boolean[totalVerticesNo];
+        Queue <Integer> queue = new LinkedList<>();
+        
+        nodes[source]=true;
+        queue.add(source);
+        
+        System.out.println("\nfrom "+source+" till "+destination+" path: ");
+            
+       while(!queue.isEmpty()){
+            source = queue.poll();
+            System.out.print(source+" ");
+            
+            if(destination == source){
+                break;
+            }
+            
+            for(int j=0; j< totalVerticesNo; j++){
+                if((adjmatrix[source][j]==1)&&(nodes[j]!=true)){
+                    queue.add(j);
+                    nodes[j]=true;
+                }
+            }
+       }
+
+        if(nodes[destination]){
+            System.out.println("\nA path was found");
+        }
+        else{
+            System.out.println("\nA path was not found");
+        }
+
+    }
+//---BFS-------------------------------------------------------------------
+    public void BFS(int vertex){
+        boolean nodes[] = new boolean[totalVerticesNo]; //nodes for visited
+        Queue <Integer> queue = new LinkedList<>();
+        
+        nodes[vertex]=true;
+        queue.add(vertex);
+        int current;
+        
+        while(!queue.isEmpty()){
+            current = queue.poll();
+            System.out.print(current+" ");
+            
+            for(int j=0; j< totalVerticesNo; j++){
+                if((adjmatrix[current][j]==1)&&(nodes[j]!=true)){
+                    queue.add(j);
+                    nodes[j]=true;
+                }
+            }
+    }
+}
+//---Main Function---------------------------------------------------------
+    public static void main(String args[]){
+        Scanner input = new Scanner(System.in);
+        int source;
+        int destination;
+        
+        System.out.println("Enter total Number of Vertices in the Graph");
+        int ans = input.nextInt();
+        
+        Airline indigo = new Airline(ans);
+        
+        addEdge(0,3);
+        addEdge(1,0);
+        addEdge(1,4);
+        addEdge(1,2);
+        addEdge(2,7);
+        addEdge(3,5);
+        addEdge(3,4);
+        addEdge(4,6);
+        addEdge(4,3);
+        addEdge(5,6);
+        addEdge(6,7);
+        
+        System.out.print("\nMinimum Spanning Tree from vertex 0: ");
+        indigo.BFS(0);
+        
+        System.out.print("\nMinimum Spanning Tree from vertex 1: ");
+        indigo.BFS(1);
+        
+        System.out.print("\nMinimum Spanning Tree from vertex 2: ");
+        indigo.BFS(2);
+        
+        System.out.print("\nMinimum Spanning Tree from vertex 3: ");
+        indigo.BFS(3);
+        
+        System.out.print("\nMinimum Spanning Tree from vertex 4: ");
+        indigo.BFS(4);
+        
+        System.out.print("\nMinimum Spanning Tree from vertex 5: ");
+        indigo.BFS(5);
+        
+        System.out.print("\nMinimum Spanning Tree from vertex 6: ");
+        indigo.BFS(6);
+        
+        System.out.print("\nMinimum Spanning Tree from vertex 7: ");
+        indigo.BFS(7);
+        
+        System.out.println("\n\nIf Path Exists from:\nSource");
+        source = input.nextInt();
+        System.out.println("to Desination: ");
+        destination = input.nextInt();
+        
+        findPath(source,destination);
+        } 
+}
