@@ -1,0 +1,40 @@
+package adsa;
+import java.util.*;
+
+public class Hash {
+static Dictionary wordcount = new Hashtable<String,String>();   
+
+//----Count Occurrence of a word-------------------------------------------
+    public static String numberOfOccurence(String str, String[] array){
+       int count=0; 
+       for(int i=0; i<array.length; i++){
+           if(str.equals(array[i])== true)
+               count++;
+       }
+        return String.valueOf(count);
+    }
+//----Adding key and value to Dictionary-----------------------------------
+    public static void addValues(String[] array){
+        for(int i=0; i<array.length; i++){
+        String count;
+        count = numberOfOccurence(array[i], array);
+        wordcount.put(array[i], count);
+        }
+    }
+//----Print Dictionary-----------------------------------------------------  
+    public static Dictionary print(){
+        return wordcount;
+    }  
+//----Main Function--------------------------------------------------------
+    public static void main(String[] args){
+    String str = "dd ee ff dd    ff kk fff";
+  
+    String[] array = str.split("\\s+",0);    
+    //Adding keys and values to Dictionary
+    addValues(array);
+    
+    //Print Dictionary
+    System.out.println("Dictionary Contents: ");
+    System.out.println(print());
+    }
+}
