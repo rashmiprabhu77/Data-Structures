@@ -1,0 +1,66 @@
+package adsa;
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+ 
+public class ActivityProblem{
+String name;
+int start, finish;
+ 
+  
+  public ActivityProblem(){
+  }
+  
+  public ActivityProblem(String name,int start, int finish)
+  {
+    this.name = name;
+    this.start = start;
+    this.finish = finish;
+  }
+  
+   static void compare(ActivityProblem arr[], int n)
+  {
+    Arrays.sort(arr, new Comparator<ActivityProblem>()
+                {
+                  public int compare(ActivityProblem s1, ActivityProblem s2)
+                  {
+                    return s1.finish - s2.finish;
+                  }
+                });
+  }
+  
+  
+  static void sort(ActivityProblem arr[], int n)
+  {
+    ActivityProblem obj = new ActivityProblem();
+    obj.compare(arr, n);
+    System.out.println("Scheduled Activities:");
+ 
+    int i = 0;
+    System.out.println(arr[i].name+": (" + arr[i].start + ", "+ arr[i].finish + ") ");
+ 
+    for (int j = 1; j < n; j++)
+    {
+      if (arr[j].start >= arr[i].finish)
+      {
+        System.out.println(arr[j].name+":(" + arr[j].start + ", "+ arr[j].finish + ") ");
+        i = j;
+      }
+    }
+  }
+//***Main******************************************************************
+  public static void main(String[] args)
+  {
+ 
+    int n = 6;
+    ActivityProblem arr[] = new ActivityProblem[n];
+    arr[0] = new ActivityProblem("A1",1, 10);
+    arr[1] = new ActivityProblem("A2",3, 4);
+    arr[2] = new ActivityProblem("A3",5, 6);
+    arr[3] = new ActivityProblem("A4",5, 7);
+    arr[4] = new ActivityProblem("A5",8, 9);
+    arr[5] = new ActivityProblem("A6",5, 9);
+ 
+    sort(arr, n);
+  }
+}
