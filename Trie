@@ -1,0 +1,72 @@
+package adsa;
+import java.util.Scanner;
+
+public class Trie {
+static final int size = 26;
+
+    static class TrieN{
+	TrieN[] child = new TrieN[size];
+	boolean isEndOfWord;
+	
+        TrieN(){
+	isEndOfWord = false;
+	for (int i = 0; i < size; i++)
+	    child[i] = null;
+	}
+    };
+	
+    static TrieN root;
+    static void insert(String key){
+        int level;
+	int length = key.length();
+	int index;
+	TrieN n = root;
+	
+        for (level = 0; level < length; level++){
+		index = key.charAt(level) - 'a';
+		if (n.child[index] == null)
+		     n.child[index] = new TrieN();
+		n = n.child[index];
+        }
+		n.isEndOfWord = true;
+	}
+
+	static boolean search(String key)
+	{       int level;
+		int length = key.length();
+		int index;
+		TrieN n = root;
+		for (level = 0; level < length; level++)
+		{
+			index = key.charAt(level) - 'a';
+			if (n.child[index] == null)
+				return false;
+			n = n.child[index];
+		}	
+		return (n.isEndOfWord);
+	}
+//****Main*****************************************************************
+	public static void main(String args[])
+	{
+		String keys[] = {"ate", "back", "bad", "by", "bye"};
+                Scanner sc = new Scanner(System.in);	
+		root = new TrieN();
+                for (int i = 0; i < keys.length ; i++)
+			insert(keys[i]);
+                System.out.println("Enter word to be searched: ");
+                String word = sc.next();
+                int ctr = 0;
+                for(int i = 0; i <keys.length; i++)
+                {
+                if(word.contains(keys[i]))
+                {
+                    System.out.println("Prefix of the word present is " + keys[i]);
+                    ctr++;
+                }
+                }
+                if(ctr==0)
+                    System.out.println("Search Unsuccessful");
+	}
+
+}
+
