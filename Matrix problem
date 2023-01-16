@@ -1,0 +1,113 @@
+/*Following program takes size of matrix and creates a square matrix of that size. To print the 4 2*2 matrices I have passed the 3*3 matrix onto functions printMatrix1, printMatrix2, printMatrix3 and printMatrix4. 4 static vectors are declared as well. In the printMatrix1 function the 2D array is traversed from 0 to 1 row and column wise and the values at every position get added to the static vector matrix1. Similarly values in Vectors matrix2(rows 0,1 and columns 1,2), matrix3(rows 1,2 and columns 0,1) and matrix4(rows 1,2 and columns 1,2) get stored. Since Matrix A is the maximum value from individual Vectors we store maximum values from every vector into Vector A and then print the Vector.
+*/
+
+package adsa;
+import java.util.*;
+import java.util.Collections;
+
+public class Matrices {
+    static Vector matrix1;
+    static Vector matrix2;
+    static Vector matrix3;
+    static Vector matrix4;
+    
+    public static void printMatrix1(int[][] originalMatrix){
+        
+    matrix1 = new Vector();
+    System.out.println("Matrix 1: ");
+        for(int i=0; i<2;i++){
+            for(int j=0; j<2; j++){
+                matrix1.add(originalMatrix[i][j]);
+            }
+        }
+        
+        Enumeration forA = matrix1.elements();
+        
+        while (forA.hasMoreElements()) {
+                System.out.println(forA.nextElement()); 
+        }
+    }
+    
+    public static void printMatrix2(int[][] originalMatrix){
+    matrix2 = new Vector();
+    System.out.println("Matrix 2: ");
+        for(int i=0; i<2;i++){
+            for(int j=1; j<3; j++){
+                matrix2.add(originalMatrix[i][j]);
+            }
+        }
+        
+        Enumeration forA = matrix2.elements();
+        
+        while (forA.hasMoreElements()) {
+                System.out.println(forA.nextElement()); 
+        }
+    }
+    
+    public static void printMatrix3(int[][] originalMatrix){
+    matrix3 = new Vector();
+    System.out.println("Matrix 3: ");
+        for(int i=1; i<3;i++){
+            for(int j=0; j<2; j++){
+                matrix3.add(originalMatrix[i][j]);
+            }
+        }
+        
+        Enumeration forA = matrix3.elements();
+        
+        while (forA.hasMoreElements()) {
+                System.out.println(forA.nextElement()); 
+        }
+    }
+    
+    public static void printMatrix4(int[][] originalMatrix){
+    matrix4 = new Vector();
+    System.out.println("Matrix 4: ");
+        for(int i=1; i<3;i++){
+            for(int j=1; j<3; j++){
+                matrix4.add(originalMatrix[i][j]);
+            }
+        }
+        
+        Enumeration forA = matrix4.elements();
+        
+        while (forA.hasMoreElements()) {
+                System.out.println(forA.nextElement()); 
+        }
+    }
+    
+    public static void findA(){
+        System.out.println("Elements of A: ");
+        Vector A = new Vector();
+        A.add(Collections.max(matrix1));
+        A.add(Collections.max(matrix2));
+        A.add(Collections.max(matrix3));
+        A.add(Collections.max(matrix4));
+        
+        System.out.println(A);
+    }
+    
+    public static void main(String args[]){
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter size of square matrix: ");
+        int size = input.nextInt();
+        
+        int[][] originalMatrix = new int[size][size];
+        
+        System.out.println("Enter Values for square matrix "+size+"x"+size+" : ");
+        
+        for(int i=0; i<size;i++){
+            for(int j=0; j<size; j++){
+                originalMatrix[i][j] = input.nextInt();
+            }
+        }
+        
+        printMatrix1(originalMatrix);
+        printMatrix2(originalMatrix);
+        printMatrix3(originalMatrix);
+        printMatrix4(originalMatrix);
+        
+        findA();
+    
+    }
+}
