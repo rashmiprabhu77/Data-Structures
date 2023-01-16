@@ -1,0 +1,260 @@
+
+package adsa;
+import java.util.Scanner;
+
+class Node {
+    int key;
+    int height;
+    int balancefactor;
+    String keycust;
+    Node left;
+    Node right;
+
+    Node() {
+        this.key = 0;
+        this.height = 0;
+        this.balancefactor = 0;
+        this.keycust = " ";
+        this.left = null;
+        this.right = null;
+    }
+
+    Node(int key, String keycust) {
+        this.key = key;
+        this.keycust = keycust;
+    }
+}
+
+
+public class AVL {
+    private static Node root;
+    static int premium_cust = 0, ordinary_cust = 0;
+    static boolean flag = false;
+
+    void updateHeight(Node n) {
+        n.height = 1 + Math.max(height(n.left), height(n.right));
+    }
+
+    void updateBalance(Node n) {
+        n.balancefactor = height(n.left) - height(n.right);
+    }
+
+    int height(Node n) {
+        if (n == null) {
+            return -1;
+        } else {
+            return n.height;
+        }
+    }
+
+    int getBalance(Node n) {
+        if (n == null) {
+            return 0;
+        } else {
+            return (height(n.right) - height(n.left));
+        }
+    }
+
+    Node rotateRight(Node y) {
+        Node x = y.left;
+        Node z = x.right;
+        x.right = y;
+        y.left = z;
+        updateHeight(y);
+        updateHeight(x);
+        updateBalance(y);
+        updateBalance(x);
+        return x;
+    }
+
+    Node rotateLeft(Node y) {
+        Node x = y.right;
+        Node z = x.left;
+        x.left = y;
+        y.right = z;
+        updateHeight(y);
+        updateHeight(x);
+        updateBalance(y);
+        updateBalance(x);
+        System.out.println("x is " + x.key + " " + x.balancefactor);
+        System.out.println("y is " + y.key + " " + y.balancefactor);
+        return x;
+    }
+
+    Node rebalanceNode(Node z) {
+        System.out.println("inside rebalance " + z.key);
+        updateHeight(z);
+        updateBalance(z);
+        int balance = z.balancefactor;
+        if ((balance == 0) || (balance == 1) || (balance == -1)) {
+            System.out.println("Already balanced");
+        } else {
+            if (balance > 1) {
+                if (height(z.left.left) > height(z.left.right)) {
+                    z = rotateRight(z);
+                } else {
+                    z.left = rotateLeft(z.left);
+                    z = rotateRight(z);
+                }
+            }
+            if (balance < -1) {
+                if (height(z.right.right) > height(z.right.left)) {
+                    System.out.println("inside <-1");
+                    z = rotateLeft(z);
+                } else {
+                    z.right = rotateRight(z.right);
+                    z = rotateLeft(z);
+                }
+            }
+        }
+        return (z);
+    }
+
+    Node insert(int key, Node node, String keycust
+    ) {
+        if (node == null) {
+            return new Node(key, keycust);
+        } else if (node.key > key) {
+            node.left = insert(key, node.left, keycust);
+            node = rebalanceNode(node);
+        } else if (node.key < key) {
+            node.right = insert(key, node.right, keycust);
+            node = rebalanceNode(node);
+        } else {
+            throw new RuntimeException("Keys with same value not allowed");
+        }
+        return (node);
+    }
+
+  
+    private void inorderTraversal(Node root) {
+        Node temp = root;
+        if (temp != null) {
+            inorderTraversal(temp.left);
+            System.out.print("( " + temp.key + "," + temp.keycust + "," + temp.height + " , " + temp.balancefactor + " )");
+            inorderTraversal(temp.right);
+        }
+    }
+    
+    public static void search(Node node,int value) {
+    if(root==null){ //tree empty
+            System.out.println("Data not found");
+            return;
+        }
+        
+        if(value == node.key){//value found at current node
+            System.out.println("Data Found");
+            return;
+        }
+        
+        if(value < node.key){
+            if(node.left == null){ //reached end of left subtree
+                System.out.println("Data Not Found");
+                return;
+            }
+            
+            node = node.left;
+            search(node,value);
+        }
+        else{
+            if(node.right == null){ //reached end of right subtree
+                System.out.println("Data Not Found");
+                return;
+            }
+            
+            node = node.right;
+            search(node,value);
+    }
+    }
+    
+    public static void update(Node node,int key, String updatedvalue){
+        if(root==null){ //tree empty
+            System.out.println("Update not possible Tree is empty");
+            return;
+        }
+        
+        if(key == node.key){
+            System.out.println("Updated from "+node.keycust);
+            node.keycust = updatedvalue;
+            System.out.println("To "+node.keycust);
+            return;
+        }
+        
+        if(key < node.key){
+            if(node.left == null){ //reached end of left subtree
+                System.out.println("Updation not possible key not found");
+                return;
+            }
+            
+            node = node.left;
+            update(node,key,updatedvalue);
+        }
+        else{
+            if(node.right == null){ //reached end of right subtree
+                System.out.println("Updation not possible key not found");
+                return;
+            }
+            
+            node = node.right;
+            update(node,key,updatedvalue);
+    }
+    }
+
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        AVL obj = new AVL();
+        /* for (int i = 0; i < 8; i++) {
+         System.out.println("Please enter an element to insert in AVL Tree");
+         root = obj.insert(sc.nextInt(), root, sc.next());
+         }*/
+        root = obj.insert(10, root, "Premium");
+        System.out.println("returning node 1 " + root.key);
+        System.out.println("Inorder traversal of the AVL Tree ");
+        obj.inorderTraversal(root);
+        root = obj.insert(20, root, "Premium");
+        System.out.println("Inorder traversal of the AVL Tree ");
+        obj.inorderTraversal(root);
+        root = obj.insert(30, root, "Ordinary");
+        System.out.println("Inorder traversal of the AVL Tree ");
+        obj.inorderTraversal(root);
+        root = obj.insert(25, root, "Premium");
+        System.out.println("Inorder traversal of the AVL Tree ");
+        obj.inorderTraversal(root);
+        root = obj.insert(35, root, "Ordinary");
+        System.out.println("Inorder traversal of the AVL Tree ");
+        obj.inorderTraversal(root);
+        root = obj.insert(5, root, "Ordinary");
+        System.out.println("Inorder traversal of the AVL Tree ");
+        obj.inorderTraversal(root);
+        root = obj.insert(40, root, "Premium");
+        System.out.println("Inorder traversal of the AVL Tree ");
+        obj.inorderTraversal(root);
+        root = obj.insert(45, root, "Ordinary");
+        System.out.println("Inorder traversal of the AVL Tree ");
+        obj.inorderTraversal(root);
+        root = obj.insert(34, root, "Ordinary");
+        System.out.println("Inorder traversal of the AVL Tree ");
+        obj.inorderTraversal(root);
+        //1,2,3,4,5,6,7,8
+        //63,9,19,27,18,108,99,81
+        
+        
+        System.out.println("\n\nEnter value to be searched: ");
+        int value = sc.nextInt();
+        search(obj.root,value);
+        
+        
+        System.out.println("\n\nEnter value and updated value : ");
+        value = sc.nextInt();
+        sc.nextLine();
+        String str = sc.nextLine();
+        update(obj.root,value,str);
+        obj.inorderTraversal(root);
+        
+    }
+        
+}
+
+/*A cosmetician wants to represent a list of her clients’ records (by their ID). For each client we would like to mark whether he/she is a key customer. Suggest a data structure that supports the search and update operation (i.e. Update client with ID = k to be a key customer) in O (log n) time in the worst case. Also, write a function to determine the number of key and ordinary customers.
+*/
