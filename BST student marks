@@ -1,0 +1,167 @@
+package adsa;
+import java.util.Scanner;
+//****Node**********************************************************
+class Node{
+    int rollno; //same as key
+    String name;
+    int mark1;
+    int mark2;
+    float avg;
+    
+    Node left,right;
+    
+    public Node(int rollno, String name, int mark1, int mark2, float avg){
+        this.rollno = rollno;
+        this.name = name;
+        this.mark1 = mark1;
+        this.mark2 = mark2;
+        this.avg = avg;
+        
+        left = right = null;
+    }
+}
+//***BST************************************************************
+public class BSearchTree {
+    static Node root;
+    
+    BSearchTree(int rollno, String name, int mark1, int mark2,float avg){
+        root = new Node(rollno, name, mark1, mark2,avg);
+    }
+    
+    BSearchTree(){
+        root = null;
+    }
+//---Inorder Traversal----------------------------------------------
+    public static void inorderTraversal(Node node){
+        if (node != null) { 
+        inorderTraversal(node.left); 
+        System.out.print(" "+node.rollno);         
+        inorderTraversal(node.right); 
+        }
+    }
+//---Search---------------------------------------------------------
+    public void search(Node node,int value){
+        if(root==null){ //tree empty
+            System.out.println("Data not found");
+            return;
+        }
+        
+        if(value == node.rollno){//value found at current node
+            System.out.println("Data Found");
+            System.out.println(print(node));
+            return;
+        }
+        
+        if(value < node.rollno){
+            if(node.left == null){ //reached end of left subtree
+                System.out.println("Data Not Found");
+                return;
+            }
+            
+            node = node.left;
+            search(node,value);
+        }
+        else{
+            if(node.right == null){ //reached end of right subtree
+                System.out.println("Data Not Found");
+                return;
+            }
+            
+            node = node.right;
+            search(node,value);
+    }}
+//---Insertion------------------------------------------------------
+    public static void insert(int rollno, String name, int mark1, int mark2){
+        float avg = (mark1+mark2)/2;
+        Node node = new Node(rollno,name,mark1,mark2,avg);
+        
+        if(root == null){//tree empty
+            root = node;
+        }
+        
+        else{
+            Node current = root;
+            Node previous;
+            
+            while(true){
+                previous = current;
+                //check left subtree
+                if(rollno < current.rollno){
+                    current = current.left;
+                    if(current == null){
+                        previous.left = node;
+                        return;
+                    }
+                }
+                
+                else{//go to right subtree
+                    current = current.right;
+                    if(current==null){
+                        previous.right = node;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+//---Average--------------------------------------------------------
+    public String print(Node node){
+        return ("For Student name: "+node.name+" Roll no: "+node.rollno+"\nMarks obtained in Subject 1 = "+node.mark1+"\nMarks obtained in Subject 2 = "+node.mark2+"\nAverage = "+node.avg);
+    }
+//---Maximum--------------------------------------------------------
+    public static int maximum(Node node){
+        Node current = node;
+        
+        while(current.right != null){
+            current = current.right;
+        }  
+        return (current.rollno);
+    }
+//---Minimum--------------------------------------------------------
+    public static int minimum(Node node){
+        Node current = node;
+        while(current.left != null){
+            current = current.left;
+        }  
+        return (current.rollno);
+    }
+//---Main Function--------------------------------------------------
+    public static void main(String args[]){
+        Scanner input = new Scanner(System.in);
+        int rollno; //same as key
+        String name;
+        int mark1;
+        int mark2;
+        BSearchTree tree = new BSearchTree(); 
+        System.out.println("Enter the number of students ");
+        int number = input.nextInt();
+        
+        for(int i=0; i<number; i++){
+             System.out.println("Enter Roll no of student ");
+             rollno = input.nextInt();
+             System.out.println("Enter Name of student ");
+             input.nextLine();
+             name = input.nextLine();
+             System.out.println("Enter marks 1 of student ");
+             mark1 = input.nextInt();
+             System.out.println("Enter marks 2 of student ");
+             mark2 = input.nextInt();
+             
+             insert(rollno,name,mark1,mark2);
+        }
+        
+        System.out.println("Inorder Traversal: ");
+        inorderTraversal(tree.root);
+        
+        System.out.println("\nMaximum Roll no: ");
+        System.out.println(maximum(tree.root));
+        
+        System.out.println("Minimum Roll no: ");
+        System.out.println(minimum(tree.root));
+        
+        System.out.println("\nSearch and Print Details");
+        System.out.println("Enter roll number to be searched : ");
+        int value = input.nextInt();
+        tree.search(tree.root,value);
+    }
+}
