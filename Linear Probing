@@ -1,0 +1,102 @@
+package adsa;
+import java.util.Scanner;
+import java.util.*;
+
+public class Student {
+    int rollno;
+    String name;
+    static Student[] studentArray = new Student[5];
+    static Hashtable studentInfo = new Hashtable();
+    static String studentHash[] = new String[5];
+    
+    public Student(){
+    }
+    
+    public Student(int rollno, String name){
+        this.rollno = rollno;
+        this.name = name;
+    }
+//---Main Function---------------------------------------------------------
+    public static void main(String args[]){
+        Scanner input = new Scanner(System.in);
+        int rollno;
+        String name;
+        
+        System.out.println("Enter info on 5 students");
+        
+        for(int i=0; i<5; i++){
+        System.out.println("Enter name for student number "+i);
+        input.nextLine();
+        name = input.nextLine();
+        System.out.println("Enter roll number for student number "+i);
+        rollno = input.nextInt();
+        
+        create(rollno,name,i);
+        }  
+        
+        insertIntoTable();
+        
+        }
+//---Creating Student obj and storing in Array-----------------------------  
+    public static void create(int rollno, String name, int count){
+        Student s = new Student(rollno,name); //object for student created
+        
+        studentArray[count] = s; //object get stored in array     
+    }
+//---Hash Function---------------------------------------------------------
+    public static int hash(int key){
+        int value = key % 10;
+        return value;
+    }
+//---Insert into Hash table------------------------------------------------
+    public static void insertIntoTable(){
+    Student s = new Student();  
+    
+    //Inserts values into studentHash Array with linear probing
+        for(int i=0; i<studentArray.length;i++){
+            s = studentArray[i];
+            int value = hash(s.rollno);
+            
+            if(studentHash[value] == null){
+                studentHash[value] = s.name;
+            }
+            else{
+                value++;
+                if(studentHash[value] == null){
+                     studentHash[value] = s.name;
+                }
+                else
+                    System.out.println("\n\nData for student with roll number:"+s.rollno+" could not be inserted");
+            }   
+        }
+        
+        search();
+    }
+//---Search Function-------------------------------------------------------
+    public static void search(){
+         Scanner input = new Scanner(System.in);
+         System.out.println("\n\n");
+         System.out.println("****Search Function****");
+         
+         System.out.println("Enter name of Student");
+         String name = input.nextLine();
+         System.out.println("Enter roll number of Student");
+         int rollno = input.nextInt();
+         
+         int value = hash(rollno);
+         String str = studentHash[value];
+         
+         if(name.equals(str))
+             System.out.println("Data Found");
+         
+         else{
+             value++;
+              if(name.equals(studentHash[value])){
+                  System.out.println("Data Found");
+              }
+              else
+                  System.out.println("Data Not Found");
+        }
+    }
+    
+}
